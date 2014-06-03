@@ -30,7 +30,9 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-                <Image MaxWidth="456" MaxHeight="400" Source="{Binding ImageSource}"></Image>
+                <Image MaxWidth="456" MaxHeight="400" Source="{Binding ImageSource}"/>
+                <!-- If the source is online, lets just use the URL instead of loading a bitmap -->
+                <Image MaxWidth="456" MaxHeight="400" Source="{Binding ImageSourceUrl}"/>
                 <ListBox ItemsSource="{Binding ImageMetadata}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">

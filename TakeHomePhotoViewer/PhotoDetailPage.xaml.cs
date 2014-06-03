@@ -17,6 +17,7 @@ namespace TakeHomePhotoViewer
     {
         private PhotoDetailViewModel _viewModel;
         public PhotoDetailViewModel ViewModel { get { return _viewModel ?? (_viewModel = new PhotoDetailViewModel()); } }
+
         public PhotoDetailPage()
         {
             InitializeComponent();
@@ -33,8 +34,7 @@ namespace TakeHomePhotoViewer
                 return;
 
             var results = await PhotoCollection.GetImageDetail(sourceId, imageId);
-            ViewModel.ImageSource = results.LargeImage;
-            ViewModel.ImageMetadata = results.ImageMetadata;
+            ViewModel.LoadResults(results);
             DataContext = ViewModel;
         }
     }
