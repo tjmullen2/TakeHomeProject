@@ -32,10 +32,12 @@ namespace TakeHomePhotoViewer
 
             // Only using CameraRoll repository for now
             PhotoCollection.RegisterRepository(new CameraRollRepository());
+            PhotoCollection.RegisterRepository(new ImgurViralRepository());
 
             var availableSourceIds = PhotoCollection.GetAvailableImageRepositoriesAsync();
 
             // For now, we are only concerned with the first repository (CameraRoll)
+            // ImgurViralRepository collection works, but OutOfMemoryException is possible
             ViewModel = new PhotoCollectionViewModel(availableSourceIds[0]);
 
             DataContext = ViewModel;
@@ -77,6 +79,18 @@ namespace TakeHomePhotoViewer
             {
                 ViewModel.ImageCollection.Add(image);
             }
+        }
+
+        private async void PhotoCollectionListBox_OnRefreshRequested(object sender, EventArgs e)
+        {
+            var results = await PhotoCollection.GetImageCollection(ViewModel.SourceId, ViewModel.ImageCollection.Count, 20);
+            if (results == null)
+                return;
+            foreach (var image in results)
+            {
+                ViewModel.ImageCollection.Add(image);
+            }
+            PhotoCollectionListBox.StopPullToRefreshLoading(true);
         }
     }
 }

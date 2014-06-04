@@ -19,6 +19,7 @@
         <DataTemplate x:Key="ItemDataTemplate">
             <Grid Tap="CollectionImage_OnTap" d:DataContext="{d:DesignInstance models:ImageSnapshotInfo}">
                 <Image Source="{Binding ThumbnailSource}" Width="130" MaxHeight="130" Margin="10"/>
+                <Image Source="{Binding ThumbnailUrl}" Width="130" MaxHeight="130" Margin="10"/>
             </Grid>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
@@ -56,7 +57,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="10,0,10,0">
-            <telerikPrimitives:RadDataBoundListBox x:Name="PhotoCollectionListBox" ItemTemplate="{StaticResource ItemDataTemplate}" ItemsSource="{Binding ImageCollection}" DataVirtualizationMode="OnDemandAutomatic" DataRequested="PhotoCollectionListBox_OnDataRequested">
+            <telerikPrimitives:RadDataBoundListBox x:Name="PhotoCollectionListBox" ItemTemplate="{StaticResource ItemDataTemplate}" ItemsSource="{Binding ImageCollection}" DataVirtualizationMode="OnDemandAutomatic" DataRequested="PhotoCollectionListBox_OnDataRequested" IsPullToRefreshEnabled="True" ShowPullToRefreshWhenNoData="True" RefreshRequested="PhotoCollectionListBox_OnRefreshRequested">
                 <telerikPrimitives:RadDataBoundListBox.VirtualizationStrategyDefinition>
                     <telerikPrimitives:WrapVirtualizationStrategyDefinition Orientation="Horizontal"></telerikPrimitives:WrapVirtualizationStrategyDefinition>
                 </telerikPrimitives:RadDataBoundListBox.VirtualizationStrategyDefinition>
