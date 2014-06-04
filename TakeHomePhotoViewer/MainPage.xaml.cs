@@ -38,7 +38,7 @@ namespace TakeHomePhotoViewer
 
             // For now, we are only concerned with the first repository (CameraRoll)
             // ImgurViralRepository collection works, but OutOfMemoryException is possible
-            ViewModel = new PhotoCollectionViewModel(availableSourceIds[0]);
+            ViewModel = new PhotoCollectionViewModel(availableSourceIds[1]);
 
             DataContext = ViewModel;
         }

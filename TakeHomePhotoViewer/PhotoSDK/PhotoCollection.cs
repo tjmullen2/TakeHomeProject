@@ -84,6 +84,11 @@ namespace TakeHomePhotoViewer.PhotoSDK
                         returnVal = await repository.GetImageAndMetadataAsync(imageId);
                         break;
                     }
+                case "ImgurViral":
+                    {
+                        returnVal = await GetRepository(sourceId).GetImageAndMetadataAsync(imageId);
+                        break;
+                    }
                 default:  // Add more repositories as more are implemented
                     break;
             }

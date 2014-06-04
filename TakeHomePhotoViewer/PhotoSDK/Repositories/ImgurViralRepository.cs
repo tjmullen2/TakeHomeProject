@@ -29,11 +29,12 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
                 foreach (var imgurImage in data.Images)
                 {
                     var newImage = new ImageSnapshotInfo();
+                    // append "t" to ID get a thumbnail according to the api 
                     newImage.ImageUrl = imgurImage.Link;
                     newImage.Id = imgurImage.ID;
                     newImage.IsWebBasedSource = true;
                     newImage.SourceId = "ImgurViral";
-                    newImage.ThumbnailUrl = imgurImage.Link;
+                    newImage.ThumbnailUrl = imgurImage.Link.Replace(imgurImage.ID, imgurImage.ID + "t");
                     CachedImages.Add(newImage);
                 }
             });
@@ -64,9 +65,20 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
             return Task.FromResult(CachedImages.Count);
         }
 
-        public Task<ImageDetailInfo> GetImageAndMetadataAsync(string imageId)
+        public async Task<ImageDetailInfo> GetImageAndMetadataAsync(string imageId)
         {
-            throw new NotImplementedException();
+            foreach (var image in CachedImages)
+            {
+                if (image.Id == imageId)
+                {
+                    var result = new ImageDetailInfo();
+                    result.LargeImageUrl = image.ImageUrl;
+                    result.MetadataType = "ImgurImage";
+                    // TODO: Download image and metadata and compose Metadata dictionary
+                    return result;
+                }
+            }
+            return null;
         }
 
         public Task<int> GetImageCountAsync()
