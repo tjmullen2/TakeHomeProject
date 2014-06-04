@@ -22,22 +22,25 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
         public ImgurViralRepository()
         {
             CachedImages.Clear();
-            _client.GetMainGalleryImages(ImgurGallerySection.Hot, ImgurGallerySort.Viral, 0, (s) =>
+            InitializeRepositoryData();
+        }
+
+        private async void InitializeRepositoryData()
+        {
+            var data = await _client.GetMainGalleryImages(ImgurGallerySection.Hot, ImgurGallerySort.Viral, 0);
+
+            foreach (var imgurImage in data.Images)
             {
-                ImgurImageData data = s;
-                Debug.WriteLine(s.Images.First().AccountUrl);
-                foreach (var imgurImage in data.Images)
-                {
-                    var newImage = new ImageSnapshotInfo();
-                    // append "t" to ID get a thumbnail according to the api 
-                    newImage.ImageUrl = imgurImage.Link;
-                    newImage.Id = imgurImage.ID;
-                    newImage.IsWebBasedSource = true;
-                    newImage.SourceId = "ImgurViral";
-                    newImage.ThumbnailUrl = imgurImage.Link.Replace(imgurImage.ID, imgurImage.ID + "t");
-                    CachedImages.Add(newImage);
-                }
-            });
+                var newImage = new ImageSnapshotInfo();
+                // append "t" to ID get a thumbnail according to the api 
+                newImage.ImageUrl = imgurImage.Link;
+                newImage.Id = imgurImage.ID;
+                newImage.IsWebBasedSource = true;
+                newImage.SourceId = "ImgurViral";
+                newImage.ThumbnailUrl = imgurImage.Link.Replace(imgurImage.ID, imgurImage.ID + "t");
+                CachedImages.Add(newImage);
+            }
+            OnRepositoryCollectionChanged(this, null);
         }
 
         public string GetRepositorySourceId()
@@ -104,6 +107,15 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
         public Task<bool> IsWebBasedAsync()
         {
             return Task.FromResult(true);
+        }
+
+        public event EventHandler RepositoryCollectionChanged;
+
+        private void OnRepositoryCollectionChanged(object sender, EventArgs e)
+        {
+            EventHandler collectionChanged = RepositoryCollectionChanged;
+            if (collectionChanged != null)
+                collectionChanged(this, e);
         }
     }
 }

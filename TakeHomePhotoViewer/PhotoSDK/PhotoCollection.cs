@@ -11,7 +11,9 @@ namespace TakeHomePhotoViewer.PhotoSDK
 {
     public static class PhotoCollection
     {
+        #region Private Data Structure
         private static readonly List<IImageRepository> Repositories = new List<IImageRepository>();
+        #endregion
 
         /// <summary>
         /// Obtains a list of keys that are available
@@ -58,16 +60,6 @@ namespace TakeHomePhotoViewer.PhotoSDK
         }
 
         /// <summary>
-        /// Future use: Particularly if we have web services that serve as repositories, this would be helpful to check for empty
-        /// </summary>
-        /// <param name="sourceId"></param>
-        /// <returns>int</returns>
-        public static Task<int> GetAvailableImages(string sourceId)
-        {
-            return GetRepository(sourceId).GetAvailableImagesFromRepositoryAsync();
-        }
-
-        /// <summary>
         /// Asynchronously obtains the detail of the image within the specified collection
         /// </summary>
         /// <param name="sourceId">Image repository key</param>
@@ -93,6 +85,16 @@ namespace TakeHomePhotoViewer.PhotoSDK
                     break;
             }
             return returnVal;
+        }
+
+        /// <summary>
+        /// Future use: Particularly if we have web services that serve as repositories, this would be helpful to check for empty
+        /// </summary>
+        /// <param name="sourceId"></param>
+        /// <returns>int</returns>
+        public static Task<int> GetAvailableImageCount(string sourceId)
+        {
+            return GetRepository(sourceId).GetAvailableImagesFromRepositoryAsync();
         }
     }
 }

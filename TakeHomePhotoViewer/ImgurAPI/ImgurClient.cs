@@ -27,21 +27,41 @@ namespace TakeHomePhotoViewer.ImgurAPI
         /// <param name="section"></param>
         /// <param name="sort"></param>
         /// <param name="page"></param>
-        public void GetMainGalleryImages(ImgurGallerySection section, ImgurGallerySort sort, int page,
-                                         Action<ImgurImageData> onCompletion)
+        public async Task<ImgurImageData> GetMainGalleryImages(ImgurGallerySection section, ImgurGallerySort sort, int page)
         {
             string _sort = sort.ToString().ToLower();
             string _section = section.ToString().ToLower();
 
-            WebClient client = new WebClient();
+            var client = new WebClient();
             client.Headers["Authorization"] = "Client-ID " + _clientID;
 
-            client.DownloadStringAsync(new Uri(string.Format(ImgurEndpoints.MainGallery, _section, _sort, page)));
-            client.DownloadStringCompleted += (c, s) =>
+            var s = await client.DownloadStringTask(new Uri(string.Format(ImgurEndpoints.MainGallery, _section, _sort, page)));
+            return JsonConvert.DeserializeObject<ImgurImageData>(s);
+        }
+    }
+
+    // Added asynchronous extension to avoid refreshing data source
+    public static class Extensions
+    {
+        public static Task<string> DownloadStringTask(this WebClient webClient, Uri uri)
+        {
+            var tcs = new TaskCompletionSource<string>();
+
+            webClient.DownloadStringCompleted += (s, e) =>
+            {
+                if (e.Error != null)
                 {
-                    var imageData = JsonConvert.DeserializeObject<ImgurImageData>(s.Result);
-                    onCompletion(imageData);
-                };
+                    tcs.SetException(e.Error);
+                }
+                else
+                {
+                    tcs.SetResult(e.Result);
+                }
+            };
+
+            webClient.DownloadStringAsync(uri);
+
+            return tcs.Task;
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Net;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
 using TakeHomePhotoViewer.PhotoSDK;
 using TakeHomePhotoViewer.PhotoSDK.Models;
 using TakeHomePhotoViewer.PhotoSDK.Repositories;
@@ -11,14 +10,22 @@ using TakeHomePhotoViewer.ViewModels;
 
 namespace TakeHomePhotoViewer
 {
-    public partial class MainPage : PhoneApplicationPage
+    public partial class MainPage
     {
+        #region ViewModel
+
         private PhotoCollectionViewModel _viewModel;
 
         /// <summary>
         /// View model for the page to use MVVM design pattern (uses lazy loading to conserve startup time)
         /// </summary>
-        public PhotoCollectionViewModel ViewModel { get { return _viewModel ?? (_viewModel = new PhotoCollectionViewModel()); } set { _viewModel = value; } }
+        public PhotoCollectionViewModel ViewModel
+        {
+            get { return _viewModel ?? (_viewModel = new PhotoCollectionViewModel()); }
+            set { _viewModel = value; }
+        }
+
+        #endregion
 
         // Constructor
         public MainPage()
@@ -38,7 +45,7 @@ namespace TakeHomePhotoViewer
 
             // For now, we are only concerned with the first repository (CameraRoll)
             // ImgurViralRepository collection works, but OutOfMemoryException is possible
-            ViewModel = new PhotoCollectionViewModel(availableSourceIds[1]);
+            ViewModel = new PhotoCollectionViewModel(PhotoCollection.GetRepository("ImgurViral"));
 
             DataContext = ViewModel;
         }
@@ -81,6 +88,7 @@ namespace TakeHomePhotoViewer
             }
         }
 
+        // This is only necessary at the moment due to the fact that the cached images change does not trigger a change in the collection in the viewmodel
         private async void PhotoCollectionListBox_OnRefreshRequested(object sender, EventArgs e)
         {
             var results = await PhotoCollection.GetImageCollection(ViewModel.SourceId, ViewModel.ImageCollection.Count, 20);

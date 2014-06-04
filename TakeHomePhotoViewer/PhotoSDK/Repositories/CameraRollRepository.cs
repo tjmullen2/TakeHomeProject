@@ -137,5 +137,14 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
             float yScale = (float)maxHeight / height;
             return (fillMax ? Math.Min(xScale, yScale) : Math.Max(xScale, yScale));
         }
+
+        public event EventHandler RepositoryCollectionChanged;
+
+        private void OnCollectionChanged(object sender, EventArgs e)
+        {
+            EventHandler collectionChanged = RepositoryCollectionChanged;
+            if (collectionChanged != null)
+                collectionChanged(this, e);
+        }
     }
 }

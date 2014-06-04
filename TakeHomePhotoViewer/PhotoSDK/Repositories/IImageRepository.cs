@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using TakeHomePhotoViewer.PhotoSDK.Models;
@@ -74,5 +75,12 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
         /// <returns>bool</returns>
         /// <remarks>Is a method rather than a property as it should be implemented in the interface.</remarks>
         Task<bool> IsWebBasedAsync();
+
+        /// <summary>
+        /// Added a required Event for sources that may change while we are using them
+        /// Example: CameraRoll can have new pictures added while app was in use, or an online source is updated periodically.
+        /// Example: Web service may periodically update itself and need to notify the view that new data is available.
+        /// </summary>
+        event EventHandler RepositoryCollectionChanged;
     }
 }

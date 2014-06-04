@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Net;
 using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
 using TakeHomePhotoViewer.PhotoSDK;
-using TakeHomePhotoViewer.PhotoSDK.Repositories;
 using TakeHomePhotoViewer.ViewModels;
 
 namespace TakeHomePhotoViewer
 {
-    public partial class PhotoDetailPage : PhoneApplicationPage
+    public partial class PhotoDetailPage
     {
         private PhotoDetailViewModel _viewModel;
         public PhotoDetailViewModel ViewModel { get { return _viewModel ?? (_viewModel = new PhotoDetailViewModel()); } }
@@ -27,6 +19,7 @@ namespace TakeHomePhotoViewer
         {
             base.OnNavigatedTo(e);
 
+            // TODO: Test for querystring keys before access to prevent possible error (should never occur, but better safe than sorry
             var imageId = HttpUtility.UrlDecode(NavigationContext.QueryString["ImageId"]);
             var sourceId = HttpUtility.UrlDecode(NavigationContext.QueryString["SourceId"]);
 
