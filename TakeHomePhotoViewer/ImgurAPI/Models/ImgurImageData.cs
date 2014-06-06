@@ -11,4 +11,10 @@ namespace TakeHomePhotoViewer.ImgurAPI.Models
         [JsonProperty(PropertyName = "data")]
         public IEnumerable<ImgurImage> Images { get; set; }
     }
+
+    public class ImgurSingleImage
+    {
+        [JsonProperty(PropertyName = "data")]
+        public ImgurImage Image { get; set; }
+    }
 }
