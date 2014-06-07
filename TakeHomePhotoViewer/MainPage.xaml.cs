@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using TakeHomePhotoViewer.PhotoSDK;
@@ -12,21 +13,6 @@ namespace TakeHomePhotoViewer
 {
     public partial class MainPage
     {
-        #region ViewModel
-
-        private PhotoCollectionViewModel _viewModel;
-
-        /// <summary>
-        /// View model for the page to use MVVM design pattern (uses lazy loading to conserve startup time)
-        /// </summary>
-        public PhotoCollectionViewModel ViewModel
-        {
-            get { return _viewModel ?? (_viewModel = new PhotoCollectionViewModel()); }
-            set { _viewModel = value; }
-        }
-
-        #endregion
-
         // Constructor
         public MainPage()
         {
@@ -37,23 +23,24 @@ namespace TakeHomePhotoViewer
         {
             base.OnNavigatedTo(e);
 
-            // Only using CameraRoll repository for now
-            PhotoCollection.RegisterRepository(new CameraRollRepository());
-            PhotoCollection.RegisterRepository(new ImgurViralRepository());
+            if (App.ViewModel.ImageCollection.Count == 0)  // We are navigating back from the detail page, so don't do anything
+            {
+                // Only using CameraRoll repository for now
+                PhotoCollection.RegisterRepository(new CameraRollRepository());
+                PhotoCollection.RegisterRepository(new ImgurViralRepository());
 
-            var availableSourceIds = PhotoCollection.GetAvailableImageRepositoriesAsync();
+                var availableSourceIds = PhotoCollection.GetAvailableImageRepositoriesAsync();
 
-            // For now, we are only concerned with the first repository (CameraRoll)
-            // ImgurViralRepository collection works, but OutOfMemoryException is possible
-            ViewModel = new PhotoCollectionViewModel(PhotoCollection.GetRepository("ImgurViral"));
-
-            DataContext = ViewModel;
+                // For now, we are only concerned with the first repository (CameraRoll)
+                // ImgurViralRepository collection works, but OutOfMemoryException is possible
+                App.ViewModel = new PhotoCollectionViewModel(PhotoCollection.GetRepository("ImgurViral"));
+                
+            }
+            DataContext = App.ViewModel;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            ViewModel = null; // Detach viewmodel to conserve memory (we will reattach it when coming back)
-
             base.OnNavigatedFrom(e);
         }
 
@@ -79,26 +66,31 @@ namespace TakeHomePhotoViewer
         /// <param name="e"></param>
         private async void PhotoCollectionListBox_OnDataRequested(object sender, EventArgs e)
         {
-            var results = await PhotoCollection.GetImageCollection(ViewModel.SourceId, ViewModel.ImageCollection.Count, 20);
+            var results = await PhotoCollection.GetImageCollection(App.ViewModel.SourceId, App.ViewModel.ImageCollection.Count, 20);
             if (results == null)
                 return;
             foreach (var image in results)
             {
-                ViewModel.ImageCollection.Add(image);
+                App.ViewModel.ImageCollection.Add(image);
             }
         }
 
         // This is only necessary at the moment due to the fact that the cached images change does not trigger a change in the collection in the viewmodel
         private async void PhotoCollectionListBox_OnRefreshRequested(object sender, EventArgs e)
         {
-            var results = await PhotoCollection.GetImageCollection(ViewModel.SourceId, ViewModel.ImageCollection.Count, 20);
+            var results = await PhotoCollection.GetImageCollection(App.ViewModel.SourceId, App.ViewModel.ImageCollection.Count, 20);
             if (results == null)
                 return;
             foreach (var image in results)
             {
-                ViewModel.ImageCollection.Add(image);
+                App.ViewModel.ImageCollection.Add(image);
             }
             PhotoCollectionListBox.StopPullToRefreshLoading(true);
+        }
+
+        private void PhotoCollectionListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/PhotoDetailPage.xaml", UriKind.Relative));
         }
     }
 }

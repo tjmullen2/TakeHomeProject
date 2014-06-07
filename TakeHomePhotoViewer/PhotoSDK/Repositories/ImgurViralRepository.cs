@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using TakeHomePhotoViewer.ImgurAPI;
@@ -16,7 +15,7 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
         private ObservableCollection<ImageSnapshotInfo> _cachedImages;
         public ObservableCollection<ImageSnapshotInfo> CachedImages { get { return _cachedImages ?? (_cachedImages = new ObservableCollection<ImageSnapshotInfo>()); } set { _cachedImages = value; } }
 
-        private ImgurClient _client = new ImgurClient("3fdb44d4988fa3b", "");
+        private readonly ImgurClient _client = new ImgurClient("3fdb44d4988fa3b", "");
 
 
         public ImgurViralRepository()
@@ -31,15 +30,9 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
 
             foreach (var imgurImage in data.Images)
             {
-                var newImage = new ImageSnapshotInfo();
-                // append "t" to ID get a thumbnail according to the api 
-                newImage.ImageUrl = imgurImage.Link;
-                newImage.Id = imgurImage.ID;
-                newImage.IsWebBasedSource = true;
-                newImage.SourceId = "ImgurViral";
-                newImage.ThumbnailUrl = imgurImage.Link.Replace(imgurImage.ID, imgurImage.ID + "t");
-                CachedImages.Add(newImage);
+                CachedImages.Add(new ImageSnapshotInfo(imgurImage));
             }
+
             OnRepositoryCollectionChanged(this, null);
         }
 
@@ -74,10 +67,21 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
             {
                 if (image.Id == imageId)
                 {
-                    var result = new ImageDetailInfo();
-                    result.LargeImageUrl = image.ImageUrl;
-                    result.MetadataType = "ImgurImage";
+                    var result = new ImageDetailInfo {LargeImageUrl = image.ImageUrl, MetadataType = "ImgurImage"};
                     // TODO: Download image and metadata and compose Metadata dictionary
+                    var imgurImageData = await _client.GetImageDetails(image.Id);
+                    var imgurImageInfo = imgurImageData.Image;
+                    result.ImageMetadata.Add("height", imgurImageInfo.Height.ToString(CultureInfo.InvariantCulture));
+                    result.ImageMetadata.Add("id", imgurImageInfo.ID);
+                    result.ImageMetadata.Add("isAnimated", imgurImageInfo.IsAnimated.ToString(CultureInfo.InvariantCulture));
+                    result.ImageMetadata.Add("link",imgurImageInfo.Link);
+                    result.ImageMetadata.Add("score", imgurImageInfo.Score.ToString(CultureInfo.InvariantCulture));
+                    result.ImageMetadata.Add("size", imgurImageInfo.Size.ToString(CultureInfo.InvariantCulture));
+                    result.ImageMetadata.Add("title", imgurImageInfo.Title);
+                    result.ImageMetadata.Add("type",imgurImageInfo.Type);
+                    result.ImageMetadata.Add("ups", imgurImageInfo.Ups.ToString(CultureInfo.InvariantCulture));
+                    result.ImageMetadata.Add("views", imgurImageInfo.Views.ToString(CultureInfo.InvariantCulture));
+                    result.ImageMetadata.Add("width", imgurImageInfo.Width.ToString(CultureInfo.InvariantCulture));
                     return result;
                 }
             }
@@ -116,6 +120,60 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
             EventHandler collectionChanged = RepositoryCollectionChanged;
             if (collectionChanged != null)
                 collectionChanged(this, e);
+        }
+    }
+}
+
+namespace TakeHomePhotoViewer.PhotoSDK.Models
+{
+    public partial class ImageSnapshotInfo
+    {
+        // Custom constructor implementation
+        public ImageSnapshotInfo(ImgurSingleImage imageInfo)
+        {
+            ImageMetadata = new Dictionary<string, string>();
+            var imgurImageInfo = imageInfo.Image;
+
+            Id = imgurImageInfo.ID;
+            IsWebBasedSource = true;
+            SourceId = "ImgurViral";
+            ImageUrl = imgurImageInfo.Link;
+            ThumbnailUrl = imgurImageInfo.Link.Replace(imgurImageInfo.ID, imgurImageInfo.ID + "t");
+
+            ImageMetadata.Add("height", imgurImageInfo.Height.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("id", imgurImageInfo.ID);
+            ImageMetadata.Add("isAnimated", imgurImageInfo.IsAnimated.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("link", imgurImageInfo.Link);
+            ImageMetadata.Add("score", imgurImageInfo.Score.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("size", imgurImageInfo.Size.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("title", imgurImageInfo.Title);
+            ImageMetadata.Add("type", imgurImageInfo.Type);
+            ImageMetadata.Add("ups", imgurImageInfo.Ups.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("views", imgurImageInfo.Views.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("width", imgurImageInfo.Width.ToString(CultureInfo.InvariantCulture));
+        }
+        // Custom constructor implementation
+        public ImageSnapshotInfo(ImgurImage imgurImageInfo)
+        {
+            ImageMetadata = new Dictionary<string, string>();
+
+            Id = imgurImageInfo.ID;
+            IsWebBasedSource = true;
+            SourceId = "ImgurViral";
+            ImageUrl = imgurImageInfo.Link;
+            ThumbnailUrl = imgurImageInfo.Link.Replace(imgurImageInfo.ID, imgurImageInfo.ID + "t");
+
+            ImageMetadata.Add("height", imgurImageInfo.Height.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("id", imgurImageInfo.ID);
+            ImageMetadata.Add("isAnimated", imgurImageInfo.IsAnimated.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("link", imgurImageInfo.Link);
+            ImageMetadata.Add("score", imgurImageInfo.Score.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("size", imgurImageInfo.Size.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("title", imgurImageInfo.Title);
+            ImageMetadata.Add("type", imgurImageInfo.Type);
+            ImageMetadata.Add("ups", imgurImageInfo.Ups.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("views", imgurImageInfo.Views.ToString(CultureInfo.InvariantCulture));
+            ImageMetadata.Add("width", imgurImageInfo.Width.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

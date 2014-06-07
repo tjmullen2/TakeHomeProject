@@ -51,15 +51,15 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-            <TextBlock Text="photos" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="TAKE HOME PHOTO VIEWER" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
+            <TextBlock Text="{Binding SourceId}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="10,0,10,0">
-            <telerikPrimitives:RadDataBoundListBox x:Name="PhotoCollectionListBox" ItemTemplate="{StaticResource ItemDataTemplate}" ItemsSource="{Binding ImageCollection}" DataVirtualizationMode="OnDemandAutomatic" DataRequested="PhotoCollectionListBox_OnDataRequested" IsPullToRefreshEnabled="True" ShowPullToRefreshWhenNoData="True" RefreshRequested="PhotoCollectionListBox_OnRefreshRequested">
+            <telerikPrimitives:RadDataBoundListBox x:Name="PhotoCollectionListBox" ItemTemplate="{StaticResource ItemDataTemplate}" ItemsSource="{Binding ImageCollection}" DataVirtualizationMode="OnDemandAutomatic" DataRequested="PhotoCollectionListBox_OnDataRequested" IsPullToRefreshEnabled="True" ShowPullToRefreshWhenNoData="True" RefreshRequested="PhotoCollectionListBox_OnRefreshRequested" SelectedItem="{Binding SelectedImage, Mode=TwoWay}" SelectionChanged="PhotoCollectionListBox_OnSelectionChanged">
                 <telerikPrimitives:RadDataBoundListBox.VirtualizationStrategyDefinition>
-                    <telerikPrimitives:WrapVirtualizationStrategyDefinition Orientation="Horizontal"></telerikPrimitives:WrapVirtualizationStrategyDefinition>
+                    <telerikPrimitives:WrapVirtualizationStrategyDefinition Orientation="Horizontal"/>
                 </telerikPrimitives:RadDataBoundListBox.VirtualizationStrategyDefinition>
                 <!--<ListBox.ItemTemplate>
                     <DataTemplate>

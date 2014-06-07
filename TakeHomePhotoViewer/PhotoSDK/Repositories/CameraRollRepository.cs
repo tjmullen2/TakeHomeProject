@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -23,9 +24,9 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
                     if (nIndex++ >= startIndex && (nIndex - 1 < (startIndex + imageCount)))
                     {
                         var snapshot = new ImageSnapshotInfo(GetRepositorySourceId(), r)
-                        {
-                            ThumbnailSource = await GetThumbnail(r.Name, 135, 135, true)
-                        };
+                            {
+                                ThumbnailSource = await GetThumbnail(r.Name, 135, 135, true)
+                            };
                         images.Add(snapshot);
                     }
                     if (nIndex - 1 == startIndex + imageCount)
@@ -40,7 +41,8 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
             return "CameraRoll";
         }
 
-        Task<IEnumerable<ImageSnapshotInfo>> IImageRepository.GetImagesFromRepositoryAsync(int startIndex, int imageCount)
+        Task<IEnumerable<ImageSnapshotInfo>> IImageRepository.GetImagesFromRepositoryAsync(int startIndex,
+                                                                                           int imageCount)
         {
             return GetImagesFromRepository(startIndex, imageCount);
         }
@@ -68,14 +70,17 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
                     var b = new BitmapImage();
                     b.SetSource(r.GetImage());
                     returnValue.MetadataType = "CameraRoll";
-                    returnValue.ImageMetadata = new Dictionary<string, string>{     {"Created Date", r.Date.ToShortDateString()},
-                                                                                    {"Image Height",r.Height.ToString(CultureInfo.InvariantCulture)},
-                                                                                    {"Image Width", r.Width.ToString(CultureInfo.InvariantCulture)},
-                                                                                    {"Image Name", r.Name}};
+                    returnValue.ImageMetadata = new Dictionary<string, string>
+                        {
+                            {"Created Date", r.Date.ToShortDateString()},
+                            {"Image Height", r.Height.ToString(CultureInfo.InvariantCulture)},
+                            {"Image Width", r.Width.ToString(CultureInfo.InvariantCulture)},
+                            {"Image Name", r.Name}
+                        };
                     returnValue.LargeImage = b;
                     break;
                 }
-            } 
+            }
             return Task.FromResult(returnValue);
         }
 
@@ -122,7 +127,7 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
                     var wb = new WriteableBitmap(b);
                     using (var ms = new MemoryStream())
                     {
-                        wb.SaveJpeg(ms, (int)(picture.Width * scale), (int)(picture.Height * scale), 0, 100);
+                        wb.SaveJpeg(ms, (int) (picture.Width*scale), (int) (picture.Height*scale), 0, 100);
                         b.SetSource(ms);
                         return Task.FromResult(b);
                     }
@@ -133,8 +138,8 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
 
         private static float CalculateScale(int width, int height, int maxWidth, int maxHeight, bool fillMax)
         {
-            float xScale = (float)maxWidth/width;
-            float yScale = (float)maxHeight / height;
+            float xScale = (float) maxWidth/width;
+            float yScale = (float) maxHeight/height;
             return (fillMax ? Math.Min(xScale, yScale) : Math.Max(xScale, yScale));
         }
 
@@ -145,6 +150,19 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
             EventHandler collectionChanged = RepositoryCollectionChanged;
             if (collectionChanged != null)
                 collectionChanged(this, e);
+        }
+    }
+}
+
+namespace TakeHomePhotoViewer.PhotoSDK.Models
+{
+    public partial class ImageSnapshotInfo
+    {
+        // Custom constructor implementation
+        public ImageSnapshotInfo(string sourceId, Picture picture)
+        {
+            SourceId = sourceId;
+            Id = picture.Name;
         }
     }
 }

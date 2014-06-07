@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using Microsoft.Xna.Framework.Media;
@@ -6,22 +7,20 @@ using TakeHomePhotoViewer.Annotations;
 
 namespace TakeHomePhotoViewer.PhotoSDK.Models
 {
-    public class ImageSnapshotInfo : INotifyPropertyChanged
+    public partial class ImageSnapshotInfo : INotifyPropertyChanged
     {
         private BitmapImage _thumbnailSource;
         private BitmapImage _imageSource;
-        private string _id;
-        private string _thumbnailUrl;
-        private string _imageUrl;
-        private bool _isWebBasedSource;
-        private string _sourceId;
+        private string      _id;
+        private string      _thumbnailUrl;
+        private string      _imageUrl;
+        private bool        _isWebBasedSource;
+        private string      _sourceId;
+        private Dictionary<string, string> _imageMetadata;
 
-        public ImageSnapshotInfo(string sourceId, Picture picture)
-        {
-            this.SourceId = sourceId;
-            this.Id = picture.Name;
-        }
-
+        /// <summary>
+        /// Default constructor, each new type should supply a custom constructor
+        /// </summary>
         public ImageSnapshotInfo()
         {
             
@@ -37,6 +36,17 @@ namespace TakeHomePhotoViewer.PhotoSDK.Models
                 OnPropertyChanged();
             }
         }
+        public string SourceId
+        {
+            get { return _sourceId; }
+            set
+            {
+                if (value == _sourceId) return;
+                _sourceId = value;
+                OnPropertyChanged();
+            }
+        }
+        public Dictionary<string,string> ImageMetadata { get { return _imageMetadata; } set { _imageMetadata = value; OnPropertyChanged(); } }
 
         // For local sources
         public BitmapImage ThumbnailSource
@@ -49,7 +59,6 @@ namespace TakeHomePhotoViewer.PhotoSDK.Models
                 OnPropertyChanged();
             }
         }
-
         public BitmapImage ImageSource
         {
             get { return _imageSource; }
@@ -72,7 +81,6 @@ namespace TakeHomePhotoViewer.PhotoSDK.Models
                 OnPropertyChanged();
             }
         }
-
         public string ImageUrl
         {
             get { return _imageUrl; }
@@ -83,7 +91,6 @@ namespace TakeHomePhotoViewer.PhotoSDK.Models
                 OnPropertyChanged();
             }
         }
-
         public bool IsWebBasedSource
         {
             get { return _isWebBasedSource; }
@@ -95,17 +102,7 @@ namespace TakeHomePhotoViewer.PhotoSDK.Models
             }
         }
 
-        public string SourceId
-        {
-            get { return _sourceId; }
-            set
-            {
-                if (value == _sourceId) return;
-                _sourceId = value;
-                OnPropertyChanged();
-            }
-        }
-
+        #region PropertyChanged Handler
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -115,5 +112,7 @@ namespace TakeHomePhotoViewer.PhotoSDK.Models
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
     }
 }

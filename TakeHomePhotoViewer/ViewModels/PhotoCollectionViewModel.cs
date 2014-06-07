@@ -13,6 +13,7 @@ namespace TakeHomePhotoViewer.ViewModels
         /// <summary>
         /// The source id (key) for this collection 
         /// </summary>
+        private string _sourceId;
         public string SourceId
         {
             get { return _sourceId; }
@@ -28,15 +29,17 @@ namespace TakeHomePhotoViewer.ViewModels
         /// Container for images
         /// </summary>
         private ObservableCollection<ImageSnapshotInfo> _imageCollection;
-
-        private string _sourceId;
-
         public ObservableCollection<ImageSnapshotInfo> ImageCollection
         {
             get { return _imageCollection ?? (_imageCollection = new ObservableCollection<ImageSnapshotInfo>()); }
             set { _imageCollection = value; OnPropertyChanged(); }
         }
-        
+
+        private ImageSnapshotInfo _selectedImage;
+        public ImageSnapshotInfo SelectedImage { get { return _selectedImage; } set { _selectedImage = value; } }
+
+        #region Contructors
+
         public PhotoCollectionViewModel()
         {
         }
@@ -45,13 +48,16 @@ namespace TakeHomePhotoViewer.ViewModels
         {
             SourceId = sourceId;
         }
-        
+
         public PhotoCollectionViewModel(IImageRepository repository)
         {
             SourceId = repository.GetRepositorySourceId();
+            ImageCollection = new ObservableCollection<ImageSnapshotInfo>();
             // Attach RepositoryCollectionChanged handler
             repository.RepositoryCollectionChanged += repository_RepositoryCollectionChanged;
         }
+
+        #endregion
 
         async void repository_RepositoryCollectionChanged(object sender, System.EventArgs e)
         {
@@ -62,7 +68,6 @@ namespace TakeHomePhotoViewer.ViewModels
                 ImageCollection.Add(image);
             }
         }
-
 
         #region PropertyChanged Support
 

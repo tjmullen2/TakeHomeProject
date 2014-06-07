@@ -38,6 +38,15 @@ namespace TakeHomePhotoViewer.ImgurAPI
             var s = await client.DownloadStringTask(new Uri(string.Format(ImgurEndpoints.MainGallery, _section, _sort, page)));
             return JsonConvert.DeserializeObject<ImgurImageData>(s);
         }
+
+        public async Task<ImgurSingleImage> GetImageDetails(string imageId)
+        {
+            var client = new WebClient();
+            client.Headers["Authorization"] = "Client-ID " + _clientID;
+
+            var s = await client.DownloadStringTask(new Uri(string.Format(ImgurEndpoints.SingleImage, imageId)));
+            return JsonConvert.DeserializeObject<ImgurSingleImage>(s);
+        }
     }
 
     // Added asynchronous extension to avoid refreshing data source

@@ -7,11 +7,27 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using TakeHomePhotoViewer.Resources;
+using TakeHomePhotoViewer.ViewModels;
 
 namespace TakeHomePhotoViewer
 {
     public partial class App : Application
     {
+        #region ViewModel
+
+        private static PhotoCollectionViewModel _viewModel;
+
+        /// <summary>
+        /// View model for the page to use MVVM design pattern (uses lazy loading to conserve startup time)
+        /// </summary>
+        public static PhotoCollectionViewModel ViewModel
+        {
+            get { return _viewModel ?? (_viewModel = new PhotoCollectionViewModel()); }
+            set { _viewModel = value; }
+        }
+
+        #endregion
+
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>
