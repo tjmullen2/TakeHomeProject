@@ -29,13 +29,6 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
         Task<int> GetAvailableImagesFromRepositoryAsync();
 
         /// <summary>
-        /// Asynchronously obtains the original image and metadata for a single image
-        /// </summary>
-        /// <param name="imageId">Unique ID to identify the image in the collection</param>
-        /// <returns>ImageDetailInfo</returns>
-        Task<ImageDetailInfo> GetImageAndMetadataAsync(string imageId);
-        
-        /// <summary>
         /// Asynchronously obtains the count of images in the collection
         /// </summary>
         /// <returns>Integer indicating available images</returns>

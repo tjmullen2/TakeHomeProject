@@ -61,33 +61,6 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
             return Task.FromResult(CachedImages.Count);
         }
 
-        public async Task<ImageDetailInfo> GetImageAndMetadataAsync(string imageId)
-        {
-            foreach (var image in CachedImages)
-            {
-                if (image.Id == imageId)
-                {
-                    var result = new ImageDetailInfo {LargeImageUrl = image.ImageUrl, MetadataType = "ImgurImage"};
-                    // TODO: Download image and metadata and compose Metadata dictionary
-                    var imgurImageData = await _client.GetImageDetails(image.Id);
-                    var imgurImageInfo = imgurImageData.Image;
-                    result.ImageMetadata.Add("height", imgurImageInfo.Height.ToString(CultureInfo.InvariantCulture));
-                    result.ImageMetadata.Add("id", imgurImageInfo.ID);
-                    result.ImageMetadata.Add("isAnimated", imgurImageInfo.IsAnimated.ToString(CultureInfo.InvariantCulture));
-                    result.ImageMetadata.Add("link",imgurImageInfo.Link);
-                    result.ImageMetadata.Add("score", imgurImageInfo.Score.ToString(CultureInfo.InvariantCulture));
-                    result.ImageMetadata.Add("size", imgurImageInfo.Size.ToString(CultureInfo.InvariantCulture));
-                    result.ImageMetadata.Add("title", imgurImageInfo.Title);
-                    result.ImageMetadata.Add("type",imgurImageInfo.Type);
-                    result.ImageMetadata.Add("ups", imgurImageInfo.Ups.ToString(CultureInfo.InvariantCulture));
-                    result.ImageMetadata.Add("views", imgurImageInfo.Views.ToString(CultureInfo.InvariantCulture));
-                    result.ImageMetadata.Add("width", imgurImageInfo.Width.ToString(CultureInfo.InvariantCulture));
-                    return result;
-                }
-            }
-            return null;
-        }
-
         public Task<int> GetImageCountAsync()
         {
             return Task.FromResult(CachedImages.Count);

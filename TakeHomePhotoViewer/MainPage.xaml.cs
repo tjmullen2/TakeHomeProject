@@ -2,12 +2,13 @@
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Navigation;
 using TakeHomePhotoViewer.PhotoSDK;
 using TakeHomePhotoViewer.PhotoSDK.Models;
 using TakeHomePhotoViewer.PhotoSDK.Repositories;
 using TakeHomePhotoViewer.ViewModels;
+using Telerik.Windows.Controls;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace TakeHomePhotoViewer
 {
@@ -17,6 +18,8 @@ namespace TakeHomePhotoViewer
         public MainPage()
         {
             InitializeComponent();
+            InteractionEffectManager.AllowedTypes.Add(typeof(RadDataBoundListBoxItem));
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

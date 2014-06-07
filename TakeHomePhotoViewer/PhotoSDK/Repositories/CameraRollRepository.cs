@@ -60,32 +60,6 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
             return Task.FromResult(m.Pictures.Count);
         }
 
-        public Task<ImageDetailInfo> GetImageAndMetadataAsync(string imageId)
-        {
-            var returnValue = new ImageDetailInfo();
-            var mediaLibrary = new MediaLibrary();
-
-            foreach (var r in mediaLibrary.Pictures)
-            {
-                if (r.Name == imageId)
-                {
-                    var b = new BitmapImage();
-                    b.SetSource(r.GetImage());
-                    returnValue.MetadataType = "CameraRoll";
-                    returnValue.ImageMetadata = new Dictionary<string, string>
-                        {
-                            {"Created Date", r.Date.ToShortDateString()},
-                            {"Image Height", r.Height.ToString(CultureInfo.InvariantCulture)},
-                            {"Image Width", r.Width.ToString(CultureInfo.InvariantCulture)},
-                            {"Image Name", r.Name}
-                        };
-                    returnValue.LargeImage = b;
-                    break;
-                }
-            }
-            return Task.FromResult(returnValue);
-        }
-
         public Task<int> GetImageCountAsync()
         {
             var m = new MediaLibrary();

@@ -9,13 +9,14 @@
     xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"
     xmlns:models="clr-namespace:TakeHomePhotoViewer.PhotoSDK.Models"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:telerikCore="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Core"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
-    toolkit:TiltEffect.IsTiltEnabled="True">
+    telerikCore:InteractionEffectManager.IsInteractionEnabled="True">
 
     <toolkit:TransitionService.NavigationInTransition>
         <toolkit:NavigationInTransition>

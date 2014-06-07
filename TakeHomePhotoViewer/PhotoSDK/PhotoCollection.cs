@@ -60,34 +60,6 @@ namespace TakeHomePhotoViewer.PhotoSDK
         }
 
         /// <summary>
-        /// Asynchronously obtains the detail of the image within the specified collection
-        /// </summary>
-        /// <param name="sourceId">Image repository key</param>
-        /// <param name="imageId">Image identifier within the collection</param>
-        /// <returns>ImageDetailInfo</returns>
-        public async static Task<ImageDetailInfo> GetImageDetail(string sourceId, string imageId)
-        {
-            var returnVal = new ImageDetailInfo();
-            switch (sourceId)
-            {
-                case "CameraRoll":
-                    {
-                        var repository = new CameraRollRepository();
-                        returnVal = await repository.GetImageAndMetadataAsync(imageId);
-                        break;
-                    }
-                case "ImgurViral":
-                    {
-                        returnVal = await GetRepository(sourceId).GetImageAndMetadataAsync(imageId);
-                        break;
-                    }
-                default:  // Add more repositories as more are implemented
-                    break;
-            }
-            return returnVal;
-        }
-
-        /// <summary>
         /// Future use: Particularly if we have web services that serve as repositories, this would be helpful to check for empty
         /// </summary>
         /// <param name="sourceId"></param>
