@@ -23,23 +23,18 @@ namespace TakeHomePhotoViewer
         {
             base.OnNavigatedTo(e);
 
-            if (App.ViewModel.ImageCollection.Count == 0)  // We are navigating back from the detail page, so don't do anything
+            if (PhotoCollection.GetAvailableImageRepositories().Count == 0)  // We are entering the page for the first time
             {
                 // Only using CameraRoll repository for now
                 PhotoCollection.RegisterRepository(new CameraRollRepository());
                 PhotoCollection.RegisterRepository(new ImgurViralRepository());
 
-                // For now, we are only concerned with the first repository (CameraRoll)
+                // For now, we are only concerned with the first repository (CameraRoll), ImgurViral works and can be substituted
                 App.ViewModel = new PhotoCollectionViewModel(PhotoCollection.GetRepository("CameraRoll"));
                 //App.ViewModel = new PhotoCollectionViewModel(PhotoCollection.GetRepository("ImgurViral"));
                 
             }
             DataContext = App.ViewModel;
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
         }
 
         private void CollectionImage_OnTap(object sender, GestureEventArgs e)

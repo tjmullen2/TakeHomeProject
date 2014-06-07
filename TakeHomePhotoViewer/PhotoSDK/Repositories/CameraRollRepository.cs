@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -166,7 +165,7 @@ namespace TakeHomePhotoViewer.PhotoSDK.Models
         {
             SourceId = sourceId;
             Id = picture.Name;
-            ImageMetadata = new Dictionary<string, string>()
+            ImageMetadata = new Dictionary<string, string>
                 {
                     {"In Album", picture.Album.Name},
                     {"Title", picture.Name},

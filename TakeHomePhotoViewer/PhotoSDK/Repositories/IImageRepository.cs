@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using TakeHomePhotoViewer.PhotoSDK.Models;
-using TakeHomePhotoViewer.ViewModels;
 
 namespace TakeHomePhotoViewer.PhotoSDK.Repositories
 {

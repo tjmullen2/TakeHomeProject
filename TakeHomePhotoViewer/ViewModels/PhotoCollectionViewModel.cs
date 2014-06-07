@@ -36,7 +36,7 @@ namespace TakeHomePhotoViewer.ViewModels
         }
 
         private ImageSnapshotInfo _selectedImage;
-        public ImageSnapshotInfo SelectedImage { get { return _selectedImage; } set { _selectedImage = value; } }
+        public ImageSnapshotInfo SelectedImage { get { return _selectedImage; } set { _selectedImage = value; OnPropertyChanged(); } }
 
         #region Contructors
 

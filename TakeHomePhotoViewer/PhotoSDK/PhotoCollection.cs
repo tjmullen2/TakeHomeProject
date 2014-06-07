@@ -19,7 +19,7 @@ namespace TakeHomePhotoViewer.PhotoSDK
         /// Obtains a list of keys that are available
         /// </summary>
         /// <returns>List of strings</returns>
-        public static List<string> GetAvailableImageRepositoriesAsync()
+        public static List<string> GetAvailableImageRepositories()
         {
             var returnVal = Repositories.Select(repository => repository.GetRepositorySourceId()).ToList();
 
