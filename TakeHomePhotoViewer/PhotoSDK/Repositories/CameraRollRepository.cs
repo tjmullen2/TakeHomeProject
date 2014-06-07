@@ -23,9 +23,12 @@ namespace TakeHomePhotoViewer.PhotoSDK.Repositories
                 {
                     if (nIndex++ >= startIndex && (nIndex - 1 < (startIndex + imageCount)))
                     {
+                        var bitmap = new BitmapImage();
+                        bitmap.SetSource(r.GetImage());
                         var snapshot = new ImageSnapshotInfo(GetRepositorySourceId(), r)
                             {
-                                ThumbnailSource = await GetThumbnail(r.Name, 135, 135, true)
+                                ThumbnailSource = await GetThumbnail(r.Name, 135, 135, true),
+                                ImageSource = bitmap
                             };
                         images.Add(snapshot);
                     }
@@ -163,6 +166,15 @@ namespace TakeHomePhotoViewer.PhotoSDK.Models
         {
             SourceId = sourceId;
             Id = picture.Name;
+            ImageMetadata = new Dictionary<string, string>()
+                {
+                    {"In Album", picture.Album.Name},
+                    {"Title", picture.Name},
+                    {"Date Taken", picture.Date.ToShortDateString()},
+                    {"Time Taken", picture.Date.TimeOfDay.ToString()},
+                    {"Width",picture.Width.ToString(CultureInfo.InvariantCulture)},
+                    {"Height",picture.Height.ToString(CultureInfo.InvariantCulture)},
+                };
         }
     }
 }
