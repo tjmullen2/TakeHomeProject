@@ -106,7 +106,6 @@
     <Compile Include="PhotoDetailPage.xaml.cs">
       <DependentUpon>PhotoDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PhotoSDK\Models\ImageDetailInfo.cs" />
     <Compile Include="PhotoSDK\Repositories\CameraRollRepository.cs" />
     <Compile Include="PhotoSDK\Repositories\IImageRepository.cs" />
     <Compile Include="PhotoSDK\PhotoCollection.cs" />
